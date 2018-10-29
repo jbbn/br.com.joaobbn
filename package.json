@@ -1,0 +1,14 @@
+{
+  "name": "br.com.joaobbn",
+  "repository": "git@github.com:jbbn/br.com.joaobbn.git",
+  "author": "Joao Bueno <joaobbn@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "mkdir -p dist && cp -t dist/ CNAME index.html",
+    "deploy": "surge dist/",
+    "deploy:hml": "surge dist/ joaobbn-hml.surge.sh"
+  },
+  "devDependencies": {
+    "surge": "^0.20.1"
+  }
+}

@@ -28,4 +28,8 @@ jobs:
       - name: Build
         run: yarn build
       - name: Deploy PR
-        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ env.pull_request }}.surge.sh
+        if: ${{ github.ref != 'refs/heads/master' }}
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ github.event.number }}.surge.sh
+      - name: Deploy production
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/

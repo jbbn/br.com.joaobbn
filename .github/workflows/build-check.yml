@@ -1,0 +1,31 @@
+name: Build check
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install global dependencies
+        run: yarn global add parcel surge
+      - name: Install local dependencies
+        run: yarn --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: Deploy PR
+        run: surge dist/ joaobbn-pr-${{ github.env.pull_request }}.surge.sh

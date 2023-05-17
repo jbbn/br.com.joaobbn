@@ -28,4 +28,4 @@ jobs:
       - name: Build
         run: yarn build
       - name: Deploy PR
-        run: surge dist/ joaobbn-pr-${{ github.env.pull_request }}.surge.sh
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ env.pull_request }}.surge.sh

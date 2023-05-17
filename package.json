@@ -11,5 +11,9 @@
     "deploy": "surge dist/",
     "deploy:full": "yarn clean && yarn build && yarn deploy",
     "deploy:hml": "surge dist/ joaobbn-hml.surge.sh"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3",
+    "surge": "^0.23.1"
   }
 }

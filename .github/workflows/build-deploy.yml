@@ -11,25 +11,20 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install global dependencies
-        run: yarn global add parcel surge
-      - name: Install local dependencies
-        run: yarn --frozen-lockfile
+          node-version: 18.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn  --prefer-offline --frozen-lockfile
       - name: Build
         run: yarn build
       - name: Deploy pull request
         if: ${{ github.ref != 'refs/heads/master' }}
-        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ github.event.number }}.surge.sh
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} yarn surge dist/ joaobbn-pr-${{ github.event.number }}.surge.sh
       - name: Deploy production
         if: ${{ github.ref == 'refs/heads/master' }}
-        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} yarn surge dist/

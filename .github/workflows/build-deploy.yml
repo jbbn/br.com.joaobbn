@@ -1,0 +1,35 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install global dependencies
+        run: yarn global add parcel surge
+      - name: Install local dependencies
+        run: yarn --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: Deploy pull request
+        if: ${{ github.ref != 'refs/heads/master' }}
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ github.event.number }}.surge.sh
+      - name: Deploy production
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/

@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Build
         run: yarn build
-      - name: Deploy PR
+      - name: Deploy pull request
         if: ${{ github.ref != 'refs/heads/master' }}
         run: SURGE_LOGIN=${{ secrets.SURGE_LOGIN }} SURGE_TOKEN=${{ secrets.SURGE_TOKEN }} surge dist/ joaobbn-pr-${{ github.event.number }}.surge.sh
       - name: Deploy production
